@@ -1,5 +1,5 @@
-# 選擇較新的 Python 基礎鏡像（例如 python:3.11-slim）
-FROM python:3.11-slim
+# 使用 Python 3.11 並選擇 slim-buster 版本
+FROM python:3.11-slim-buster
 
 # 設定工作目錄
 WORKDIR /app
