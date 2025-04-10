@@ -14,18 +14,21 @@ RUN apt-get update && \
     libasound2 \
     libatk-bridge2.0-0 \
     libgtk-3-0 \
-    libdrm2 \
     xdg-utils && \
     rm -rf /var/lib/apt/lists/*
 
-# 下載並安裝 Chrome
+# 下載並安裝 Chrome（獲取完整版本號）
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     dpkg -i google-chrome-stable_current_amd64.deb || apt-get install -yf && \
     rm google-chrome-stable_current_amd64.deb
 
-# 下載並安裝 ChromeDriver（替換版本號）
-RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1) && \
-    wget -q https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_VERSION}.0.0.0/linux64/chromedriver-linux64.zip && \
+# 獲取 Chrome 完整版本號（例如 117.0.5938.92）
+RUN CHROME_FULL_VERSION=$(google-chrome --version | awk '{print $3}') && \
+    echo "Chrome 完整版本號: $CHROME_FULL_VERSION" && \
+    CHROME_MAJOR_VERSION=$(echo $CHROME_FULL_VERSION | cut -d'.' -f1) && \
+    echo "Chrome 主版本號: $CHROME_MAJOR_VERSION" && \
+    # 下載對應的 ChromeDriver
+    wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_FULL_VERSION/linux64/chromedriver-linux64.zip" && \
     unzip chromedriver-linux64.zip && \
     mv chromedriver-linux64/chromedriver /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver && \
